@@ -159,6 +159,15 @@
     border-bottom:3px solid var(--orange);
   }
   .tab-btn:hover{ color:#fff; }
+  .tab-btn-more{
+    flex-shrink:0;
+    opacity:0.55;
+    font-size:13px;
+    letter-spacing:0.14em;
+    padding-left:10px;
+    padding-right:10px;
+  }
+  .tab-btn-more.active{ opacity:1; }
 
   /* ===== MAIN ===== */
   main{
@@ -441,6 +450,119 @@
     margin:0;
   }
   .contact-sub{ font-size:12px; color:var(--text-mute); margin:2px 0 0 0; }
+  .contacts-editbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    margin-bottom:14px;
+  }
+  .edit-toggle-btn{
+    font-family:'Barlow Condensed', sans-serif;
+    font-weight:600;
+    font-size:14px;
+    letter-spacing:0.02em;
+    text-transform:uppercase;
+    background:none;
+    color:var(--blue);
+    border:1px solid var(--blue);
+    padding:6px 12px;
+    border-radius:6px;
+    cursor:pointer;
+  }
+  .edit-toggle-btn.saving{ background:var(--blue); color:#fff; }
+  .contacts-hint{
+    font-size:11px;
+    color:var(--text-mute);
+    margin:0 0 14px 0;
+    line-height:1.5;
+    display:none;
+  }
+  .contacts-hint.show{ display:block; }
+  [contenteditable="true"]{
+    outline:1px dashed var(--blue);
+    outline-offset:2px;
+    border-radius:3px;
+    background:#F3F7FC;
+  }
+  .contact-phone-input{
+    display:none;
+    margin-top:4px;
+    font-family:'Roboto Mono',monospace;
+    font-size:12px;
+    padding:5px 7px;
+    border:1px dashed var(--blue);
+    border-radius:4px;
+    background:#F3F7FC;
+    width:100%;
+    max-width:160px;
+  }
+  .contacts-editing .contact-phone-input{ display:block; }
+  .contact-phone-display{
+    font-family:'Roboto Mono',monospace;
+    font-size:11.5px;
+    color:var(--text-mute);
+    margin:3px 0 0 0;
+  }
+  .add-card-btn{
+    display:none;
+    width:100%;
+    font-family:'Barlow Condensed', sans-serif;
+    font-weight:600;
+    font-size:15px;
+    letter-spacing:0.02em;
+    text-transform:uppercase;
+    background:none;
+    color:var(--blue);
+    border:1px dashed var(--blue);
+    padding:10px;
+    border-radius:8px;
+    cursor:pointer;
+    margin-top:4px;
+  }
+  .contacts-editing .add-card-btn, .gates-editing .add-card-btn{ display:block; }
+  .card-remove-btn{
+    display:none;
+    flex-shrink:0;
+    width:30px;
+    height:30px;
+    border-radius:50%;
+    background:none;
+    color:#B23A2E;
+    border:1px solid #E0B3AC;
+    font-size:14px;
+    line-height:1;
+    cursor:pointer;
+    align-items:center;
+    justify-content:center;
+  }
+  .contacts-editing .card-remove-btn, .gates-editing .card-remove-btn{ display:flex; }
+  .contact-card{ align-items:flex-start; }
+  .contact-card-actions{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+    flex-shrink:0;
+  }
+  .gate-card{ position:relative; }
+  .gate-status-toggle{
+    font-family:'Roboto Mono',monospace;
+    font-size:10px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    padding:2px 8px;
+    border-radius:10px;
+    background:#EAF4EC;
+    color:#2C8A46;
+    white-space:nowrap;
+    border:none;
+    cursor:default;
+  }
+  .gate-status-toggle.future{ background:#EEF0F2; color:#7A828C; }
+  .gates-editing .gate-status-toggle{ cursor:pointer; border:1px dashed currentColor; }
+  .gates-editing .gate-card{ padding-right:44px; }
+  .gates-editing .gate-card .card-remove-btn{ position:absolute; top:12px; right:12px; }
   .contact-call{
     width:38px; height:38px;
     border-radius:50%;
@@ -598,7 +720,7 @@
     <button class="tab-btn active" data-tab="plan">Site Plan</button>
     <button class="tab-btn" data-tab="gates">Gates &amp; Access</button>
     <button class="tab-btn" data-tab="contacts">Contacts</button>
-    <button class="tab-btn" data-tab="updates">Updates</button>
+    <button class="tab-btn tab-btn-more" data-tab="updates" aria-label="Updates">&bull;&bull;&bull;</button>
   </nav>
 </header>
 
@@ -606,21 +728,16 @@
 
   <!-- SITE PLAN -->
   <section class="panel active" id="panel-plan">
-    <p class="section-label">Main Logistics Map</p>
-    <h2 class="section-title">Site Plan</h2>
-    <p class="section-desc">Tap the map to zoom. This image is swapped weekly by the VDC team — the link and QR code stay the same, so save it once and always get the current issue.</p>
 
     <div class="wg-panel">
-      <span class="wg-badge">Proof of Concept</span>
-      <p class="section-title" style="font-size:19px; margin-bottom:2px;">Walking Guide</p>
-      <p class="section-desc" style="margin-bottom:0;">Get your live position on the map and a walking route along the pedestrian walkway to wherever you're headed. Position is approximate (phone GPS, ±5–15 ft) and the route follows a simplified path network — good for orientation, not survey-grade.</p>
+      <p class="section-title" style="font-size:20px; margin-bottom:10px;">Where do you need to go?</p>
       <div class="wg-row">
         <select class="wg-select" id="wg-dest">
           <option value="">Choose a destination…</option>
         </select>
         <button class="btn orange" id="wg-start">Find My Way</button>
       </div>
-      <p class="wg-status" id="wg-status">Tap "Find My Way" to share your location and get walking directions.</p>
+      <p class="wg-status" id="wg-status">Tap Find My Way and allow location access.</p>
     </div>
 
     <div class="plan-frame">
@@ -650,120 +767,30 @@
 
   <!-- GATES -->
   <section class="panel" id="panel-gates">
-    <p class="section-label">Access Points</p>
-    <h2 class="section-title">Gates &amp; Access</h2>
-    <p class="section-desc">Reference only — confirm hours and credential requirements with site security before your first visit.</p>
-
-    <div class="gate-card">
-      <div class="gate-head">
-        <p class="gate-name">Gate A</p>
-        <span class="gate-status">Active</span>
-      </div>
-      <p class="gate-meta">Off Robert Rd. · Guard shack on site · <b>Truck / lift traffic</b></p>
+    <div class="contacts-editbar">
+      <h2 class="section-title" style="margin-bottom:0;">Gates &amp; Access</h2>
+      <button class="edit-toggle-btn" id="gates-edit-btn">Edit</button>
     </div>
-
-    <div class="gate-card">
-      <div class="gate-head">
-        <p class="gate-name">Gate B</p>
-        <span class="gate-status">Active</span>
-      </div>
-      <p class="gate-meta">Off Robert Rd. · Guard shack on site · <b>Contractor &amp; OFCI traffic</b></p>
-    </div>
-
-    <div class="gate-card">
-      <div class="gate-head">
-        <p class="gate-name">Gate D — Main Construction Entrance</p>
-        <span class="gate-status">Active</span>
-      </div>
-      <p class="gate-meta">Visitor parking &amp; security check-in · <b>Personal vehicle + OFCI traffic</b></p>
-    </div>
-
-    <div class="gate-card future">
-      <div class="gate-head">
-        <p class="gate-name">Gate C — Future Entrance</p>
-        <span class="gate-status future">Not yet open</span>
-      </div>
-      <p class="gate-meta">Guard shack planned · opens with future phase</p>
-    </div>
-
-    <div class="gate-card future">
-      <div class="gate-head">
-        <p class="gate-name">Gate E — Badged Employees Only</p>
-        <span class="gate-status future">Not yet open</span>
-      </div>
-      <p class="gate-meta">Future guard shack near CES area</p>
-    </div>
-
-    <div class="gate-card future">
-      <div class="gate-head">
-        <p class="gate-name">Gate F — Truck Exit</p>
-        <span class="gate-status future">Not yet open</span>
-      </div>
-      <p class="gate-meta">Future truck exit at south end of laydown row</p>
-    </div>
-
-    <div class="fill-note">This tab is placeholder content for the mockup. In the live version, swap in real hours, badge requirements, and any temporary closures — it updates independently of the site plan image.</div>
+    <p class="contacts-hint" id="gates-hint">Tap any field to edit — name, status, or purpose. "Done" saves it to this device.</p>
+    <div id="gates-list"></div>
+    <button class="add-card-btn" id="gates-add-btn">+ Add Gate</button>
   </section>
 
   <!-- CONTACTS -->
   <section class="panel" id="panel-contacts">
-    <p class="section-label">Who To Call</p>
-    <h2 class="section-title">Site Contacts</h2>
-    <p class="section-desc">Placeholder roles below — swap in your team's names and numbers before publishing.</p>
-
-    <div class="contact-card">
-      <div>
-        <p class="contact-role">Site Logistics / VDC</p>
-        <p class="contact-name">Alex Rayis</p>
-        <p class="contact-sub">Senior VDC Manager</p>
-      </div>
-      <a class="contact-call" href="tel:">☎</a>
+    <div class="contacts-editbar">
+      <h2 class="section-title" style="margin-bottom:0;">Site Contacts</h2>
+      <button class="edit-toggle-btn" id="contacts-edit-btn">Edit</button>
     </div>
-
-    <div class="contact-card">
-      <div>
-        <p class="contact-role">Security / Guard Shack</p>
-        <p class="contact-name">Main Gate D</p>
-        <p class="contact-sub">Visitor check-in</p>
-      </div>
-      <a class="contact-call" href="tel:">☎</a>
-    </div>
-
-    <div class="contact-card">
-      <div>
-        <p class="contact-role">Superintendent</p>
-        <p class="contact-name">Add name</p>
-        <p class="contact-sub">Field operations</p>
-      </div>
-      <a class="contact-call" href="tel:">☎</a>
-    </div>
-
-    <div class="fill-note">Placeholder content. Add real names, roles, and direct lines for your team before this goes live.</div>
+    <p class="contacts-hint" id="contacts-hint">Tap any field to edit — role, name, title, or number. "Done" saves it to this device.</p>
+    <div id="contacts-list"></div>
+    <button class="add-card-btn" id="contacts-add-btn">+ Add Contact</button>
   </section>
 
   <!-- UPDATES -->
   <section class="panel" id="panel-updates">
-    <p class="section-label">Change Log</p>
     <h2 class="section-title">Updates</h2>
-    <p class="section-desc">A short note each week on what moved — helpful for contractors who only check in occasionally.</p>
-
-    <div class="log-item">
-      <p class="log-date mono">08.20.2026</p>
-      <p class="log-title">Current issue</p>
-      <p class="log-desc">Gate C (future entrance) and Gate E (badged employees only) added to the map ahead of the next phase.</p>
-    </div>
-    <div class="log-item old">
-      <p class="log-date mono">08.13.2026</p>
-      <p class="log-title">Prior issue</p>
-      <p class="log-desc">Placeholder entry — this is where last week's note would sit once you're posting real revisions.</p>
-    </div>
-    <div class="log-item old">
-      <p class="log-date mono">08.06.2026</p>
-      <p class="log-title">Prior issue</p>
-      <p class="log-desc">Placeholder entry.</p>
-    </div>
-
-    <div class="fill-note">Placeholder log. In practice, add one line each week when you swap the site plan image — it gives contractors a reason to check back instead of assuming nothing changed.</div>
+    <p class="section-desc" style="margin-bottom:0;">No updates yet — a note will show here when the plan changes.</p>
   </section>
 
 </main>
@@ -967,6 +994,210 @@
       updateRoute({x:left, y:top});
     }
   });
+
+  // ===== EDITABLE CONTACTS & GATES (saved to this device only, via localStorage) =====
+  function cleanTel(v){ return (v||'').replace(/[^\d+]/g, ''); }
+  function esc(v){
+    const d = document.createElement('div');
+    d.textContent = v == null ? '' : v;
+    return d.innerHTML;
+  }
+  function uid(){ return 'x' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+
+  // ---- Contacts ----
+  const CONTACTS_KEY = 'spade-contacts-v2';
+  const DEFAULT_CONTACTS = [
+    {id:'1', role:'Site Logistics / VDC', name:'Alex Rayis', sub:'Senior VDC Manager', phone:''},
+    {id:'2', role:'Security / Guard Shack', name:'Main Gate D', sub:'Visitor check-in', phone:''},
+    {id:'3', role:'Superintendent', name:'Add name', sub:'Field operations', phone:''}
+  ];
+  let contactsData = DEFAULT_CONTACTS;
+  try{
+    const raw = localStorage.getItem(CONTACTS_KEY);
+    if(raw) contactsData = JSON.parse(raw);
+  }catch(e){ /* fall back to defaults */ }
+
+  const contactsList = document.getElementById('contacts-list');
+  const contactsEditBtn = document.getElementById('contacts-edit-btn');
+  const contactsHint = document.getElementById('contacts-hint');
+  const contactsPanel = document.getElementById('panel-contacts');
+  const contactsAddBtn = document.getElementById('contacts-add-btn');
+  let contactsEditing = false;
+
+  function renderContacts(){
+    contactsList.innerHTML = contactsData.map(c => `
+      <div class="contact-card" data-id="${c.id}">
+        <div style="flex:1; min-width:0;">
+          <p class="contact-role" data-field="role" contenteditable="false">${esc(c.role)}</p>
+          <p class="contact-name" data-field="name" contenteditable="false">${esc(c.name)}</p>
+          <p class="contact-sub" data-field="sub" contenteditable="false">${esc(c.sub)}</p>
+          <p class="contact-phone-display" data-field="phone-display">${esc(c.phone)}</p>
+          <input class="contact-phone-input" type="tel" data-field="phone" placeholder="Phone number" value="${esc(c.phone)}">
+        </div>
+        <div class="contact-card-actions">
+          <a class="contact-call" href="tel:${cleanTel(c.phone)}" data-field="call">☎</a>
+          <button class="card-remove-btn" data-field="remove" title="Remove">✕</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function collectContacts(){
+    contactsData = Array.from(contactsList.querySelectorAll('.contact-card')).map(card=>{
+      const phone = card.querySelector('[data-field="phone"]').value.trim();
+      return {
+        id: card.dataset.id,
+        role: card.querySelector('[data-field="role"]').textContent.trim(),
+        name: card.querySelector('[data-field="name"]').textContent.trim(),
+        sub: card.querySelector('[data-field="sub"]').textContent.trim(),
+        phone
+      };
+    });
+  }
+
+  function saveContacts(){
+    collectContacts();
+    try{ localStorage.setItem(CONTACTS_KEY, JSON.stringify(contactsData)); }catch(e){ /* storage unavailable */ }
+  }
+
+  function setContactsEditing(on){
+    contactsEditing = on;
+    if(on) renderContacts(); // fresh render entering edit mode
+    contactsPanel.classList.toggle('contacts-editing', on);
+    contactsHint.classList.toggle('show', on);
+    contactsEditBtn.textContent = on ? 'Done' : 'Edit';
+    contactsEditBtn.classList.toggle('saving', on);
+    contactsList.querySelectorAll('[data-field="role"],[data-field="name"],[data-field="sub"]').forEach(el=>{
+      el.setAttribute('contenteditable', on ? 'true' : 'false');
+    });
+    if(!on){ saveContacts(); renderContacts(); }
+  }
+
+  contactsEditBtn.addEventListener('click', ()=> setContactsEditing(!contactsEditing));
+  contactsAddBtn.addEventListener('click', ()=>{
+    collectContacts();
+    contactsData.push({id: uid(), role:'Role', name:'Name', sub:'', phone:''});
+    renderContacts();
+    contactsList.querySelectorAll('[data-field="role"],[data-field="name"],[data-field="sub"]').forEach(el=>{
+      el.setAttribute('contenteditable','true');
+    });
+  });
+  contactsList.addEventListener('click', (e)=>{
+    if(e.target.dataset.field === 'remove'){
+      const card = e.target.closest('.contact-card');
+      collectContacts();
+      contactsData = contactsData.filter(c=>c.id !== card.dataset.id);
+      renderContacts();
+      if(contactsEditing){
+        contactsList.querySelectorAll('[data-field="role"],[data-field="name"],[data-field="sub"]').forEach(el=>{
+          el.setAttribute('contenteditable','true');
+        });
+      }
+    }
+  });
+  contactsList.addEventListener('input', (e)=>{
+    if(e.target.dataset.field === 'phone'){
+      const card = e.target.closest('.contact-card');
+      card.querySelector('[data-field="phone-display"]').textContent = e.target.value;
+      card.querySelector('[data-field="call"]').setAttribute('href', 'tel:' + cleanTel(e.target.value));
+    }
+  });
+  renderContacts();
+
+  // ---- Gates ----
+  const GATES_KEY = 'spade-gates-v1';
+  const DEFAULT_GATES = [
+    {id:'1', name:'Gate A', status:'active', purpose:''},
+    {id:'2', name:'Gate B', status:'active', purpose:''},
+    {id:'3', name:'Gate D — Main Construction Entrance', status:'active', purpose:''},
+    {id:'4', name:'Gate C — Future Entrance', status:'future', purpose:''},
+    {id:'5', name:'Gate E — Badged Employees Only', status:'future', purpose:''},
+    {id:'6', name:'Gate F — Truck Exit', status:'future', purpose:''}
+  ];
+  let gatesData = DEFAULT_GATES;
+  try{
+    const raw = localStorage.getItem(GATES_KEY);
+    if(raw) gatesData = JSON.parse(raw);
+  }catch(e){ /* fall back to defaults */ }
+
+  const gatesList = document.getElementById('gates-list');
+  const gatesEditBtn = document.getElementById('gates-edit-btn');
+  const gatesHint = document.getElementById('gates-hint');
+  const gatesPanel = document.getElementById('panel-gates');
+  const gatesAddBtn = document.getElementById('gates-add-btn');
+  let gatesEditing = false;
+
+  function renderGates(){
+    gatesList.innerHTML = gatesData.map(g => `
+      <div class="gate-card${g.status==='future' ? ' future' : ''}" data-id="${g.id}">
+        <div class="gate-head">
+          <p class="gate-name" data-field="name" contenteditable="false">${esc(g.name)}</p>
+          <button class="gate-status-toggle${g.status==='future' ? ' future' : ''}" data-field="status">${g.status==='future' ? 'Not yet open' : 'Active'}</button>
+        </div>
+        <p class="gate-meta" data-field="purpose" contenteditable="false">${g.purpose ? esc(g.purpose) : 'Purpose: add here'}</p>
+        <button class="card-remove-btn" data-field="remove" title="Remove">✕</button>
+      </div>
+    `).join('');
+  }
+
+  function collectGates(){
+    gatesData = Array.from(gatesList.querySelectorAll('.gate-card')).map(card=>{
+      return {
+        id: card.dataset.id,
+        name: card.querySelector('[data-field="name"]').textContent.trim(),
+        status: card.querySelector('[data-field="status"]').classList.contains('future') ? 'future' : 'active',
+        purpose: card.querySelector('[data-field="purpose"]').textContent.trim()
+      };
+    });
+  }
+
+  function saveGates(){
+    collectGates();
+    try{ localStorage.setItem(GATES_KEY, JSON.stringify(gatesData)); }catch(e){ /* storage unavailable */ }
+  }
+
+  function setGatesEditing(on){
+    gatesEditing = on;
+    if(on) renderGates();
+    gatesPanel.classList.toggle('gates-editing', on);
+    gatesHint.classList.toggle('show', on);
+    gatesEditBtn.textContent = on ? 'Done' : 'Edit';
+    gatesEditBtn.classList.toggle('saving', on);
+    gatesList.querySelectorAll('[data-field="name"],[data-field="purpose"]').forEach(el=>{
+      el.setAttribute('contenteditable', on ? 'true' : 'false');
+    });
+    if(!on){ saveGates(); renderGates(); }
+  }
+
+  gatesEditBtn.addEventListener('click', ()=> setGatesEditing(!gatesEditing));
+  gatesAddBtn.addEventListener('click', ()=>{
+    collectGates();
+    gatesData.push({id: uid(), name:'Gate', status:'active', purpose:''});
+    renderGates();
+    gatesList.querySelectorAll('[data-field="name"],[data-field="purpose"]').forEach(el=>{
+      el.setAttribute('contenteditable','true');
+    });
+  });
+  gatesList.addEventListener('click', (e)=>{
+    if(e.target.dataset.field === 'remove'){
+      const card = e.target.closest('.gate-card');
+      collectGates();
+      gatesData = gatesData.filter(g=>g.id !== card.dataset.id);
+      renderGates();
+      if(gatesEditing){
+        gatesList.querySelectorAll('[data-field="name"],[data-field="purpose"]').forEach(el=>{
+          el.setAttribute('contenteditable','true');
+        });
+      }
+      return;
+    }
+    if(e.target.dataset.field === 'status' && gatesEditing){
+      e.target.classList.toggle('future');
+      e.target.textContent = e.target.classList.contains('future') ? 'Not yet open' : 'Active';
+      e.target.closest('.gate-card').classList.toggle('future', e.target.classList.contains('future'));
+    }
+  });
+  renderGates();
 
   // tabs
   document.querySelectorAll('.tab-btn').forEach(btn=>{
